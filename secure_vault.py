@@ -35,3 +35,17 @@ def init_db():
                         password TEXT NOT NULL)''')
     conn.commit()
     conn.close()
+
+# Master Password Setup
+def setup_master_password():
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS master (password TEXT)")
+    cursor.execute("SELECT password FROM master")
+    result = cursor.fetchone()
+    if result is None:
+        master_password = getpass.getpass("Set a Master Password: ")
+        hashed = bcrypt.hashpw(master_password.encode(), bcrypt.gensalt())
+        cursor.execute("INSERT INTO master (password) VALUES (?)", (hashed,))
+        conn.commit()
+    conn.close()
