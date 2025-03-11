@@ -66,3 +66,18 @@ def verify_master_password():
             break
         else:
             print("Incorrect Password. Try Again.")
+
+
+# Add New Credential
+def add_credential():
+    service = input("Service Name: ")
+    username = input("Username: ")
+    password = getpass.getpass("Password: ")
+    encrypted_password = cipher.encrypt(password.encode()).decode()
+    
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO vault (service, username, password) VALUES (?, ?, ?)", (service, username, encrypted_password))
+    conn.commit()
+    conn.close()
+    print("Credential Stored Successfully!\n")
