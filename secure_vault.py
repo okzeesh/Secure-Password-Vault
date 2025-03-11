@@ -81,3 +81,21 @@ def add_credential():
     conn.commit()
     conn.close()
     print("Credential Stored Successfully!\n")
+
+# Retrieve Stored Credentials
+def view_credentials():
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, service, username, password FROM vault")
+    rows = cursor.fetchall()
+    conn.close()
+    
+    if not rows:
+        print("No credentials stored yet.\n")
+        return
+    
+    print("Stored Credentials:")
+    for row in rows:
+        decrypted_password = cipher.decrypt(row[3].encode()).decode()
+        print(f"[{row[0]}] {row[1]} - {row[2]} - {decrypted_password}")
+    print()
