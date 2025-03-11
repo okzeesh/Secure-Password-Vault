@@ -116,3 +116,29 @@ def copy_password():
         print("Password copied to clipboard!\n")
     else:
         print("Invalid ID.\n")
+
+# Main Menu
+def main():
+    init_db()
+    setup_master_password()
+    verify_master_password()
+    
+    while True:
+        print("\nOptions:")
+        print("1. Add Credential")
+        print("2. View Credentials")
+        print("3. Copy Password")
+        print("4. Exit")
+        choice = input("Select an option: ")
+        
+        if choice == "1":
+            add_credential()
+        elif choice == "2":
+            view_credentials()
+        elif choice == "3":
+            copy_password()
+        elif choice == "4":
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Try again.")
