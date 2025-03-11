@@ -49,3 +49,20 @@ def setup_master_password():
         cursor.execute("INSERT INTO master (password) VALUES (?)", (hashed,))
         conn.commit()
     conn.close()
+
+# Verify Master Password
+def verify_master_password():
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute("SELECT password FROM master")
+    hashed_password = cursor.fetchone()[0]  # Fetch hashed password
+
+    conn.close()
+
+    while True:
+        master_password = getpass.getpass("Enter Master Password: ")
+        if bcrypt.checkpw(master_password.encode(), hashed_password):
+            print("Access Granted!\n")
+            break
+        else:
+            print("Incorrect Password. Try Again.")
