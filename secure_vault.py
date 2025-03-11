@@ -99,3 +99,20 @@ def view_credentials():
         decrypted_password = cipher.decrypt(row[3].encode()).decode()
         print(f"[{row[0]}] {row[1]} - {row[2]} - {decrypted_password}")
     print()
+
+# Copy Password to Clipboard
+def copy_password():
+    view_credentials()
+    entry_id = input("Enter ID to copy password: ")
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute("SELECT password FROM vault WHERE id = ?", (entry_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result:
+        decrypted_password = cipher.decrypt(result[0].encode()).decode()
+        pyperclip.copy(decrypted_password)
+        print("Password copied to clipboard!\n")
+    else:
+        print("Invalid ID.\n")
